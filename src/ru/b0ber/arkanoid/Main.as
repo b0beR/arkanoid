@@ -15,6 +15,7 @@ public static const FIELD_WIDTH:Number = 640;
 public static const FIELD_HEIGHT:Number = 480;
 private var ball:Ball;
 private var bat:Bat;
+private var level:Level;
 
 [Swf(width=640, height=480, frameRate=60)]
 public function Main() {
@@ -28,21 +29,27 @@ public function Main() {
   stage.addEventListener(KeyboardEvent.KEY_DOWN, bat.keyDownListener);
   stage.addEventListener(KeyboardEvent.KEY_UP, bat.keyUpListener);
   
-  addChild(new Level(0));
+  level = new Level(0);
+  addChild(level);
   
-  stage.addEventListener(KeyboardEvent.KEY_DOWN, function(event:KeyboardEvent):void {
-    if (ball == null && event.keyCode == Keyboard.SPACE) {
-      ball = new Ball(320, 230, new Point(5, 8), bat);
-      addChild(ball);
-      addEventListener(Event.ENTER_FRAME, ball.moveOneFrame);
-      ball.addEventListener(Ball.FAIL_EVENT, function(..._):void {
-        removeChild(ball);
-        removeEventListener(Event.ENTER_FRAME, ball.moveOneFrame);
-        ball.destroy();
-        ball = null;
-      });
-    }
-  });
+  stage.addEventListener(KeyboardEvent.KEY_DOWN, keyboardListener);
 }
+
+private function keyboardListener(event:KeyboardEvent):void {
+  if (ball == null && event.keyCode == Keyboard.SPACE) {
+    ball = new Ball(320, 230, new Point(3, 4), bat, level);
+    addChild(ball);
+    addEventListener(Event.ENTER_FRAME, ball.moveOneFrame);
+    ball.addEventListener(Ball.FAIL_EVENT, ballFail);
+  }
+}
+
+private function ballFail(..._):void {
+  removeChild(ball);
+  removeEventListener(Event.ENTER_FRAME, ball.moveOneFrame);
+  ball.destroy();
+  ball = null;
+}
+
 }
 }

@@ -19,6 +19,10 @@ public function Bat(initialX:Number, initialY:Number) {
   y = initialY;
 }
 
+public function get ballDx():Number {
+  return dx / 10;
+}
+
 public function keyDownListener(event:KeyboardEvent):void {
   if (event.keyCode == Keyboard.LEFT) {
     dx = -10;

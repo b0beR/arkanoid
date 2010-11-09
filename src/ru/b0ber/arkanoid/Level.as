@@ -1,10 +1,13 @@
 package ru.b0ber.arkanoid {
-	import org.casalib.display.CasaSprite;
+import org.casalib.display.CasaSprite;
+
+import flash.events.Event;
 
 /**
  * @author Andrey Bobkv
  */
 public class Level extends CasaSprite {
+public static const WIN_EVENT:String = "levelWin";
 private static const LEVELS:Array = [
   [
     [1,1,1,1,1,1,1,1,1,1],
@@ -15,7 +18,7 @@ private static const LEVELS:Array = [
 
 private var levelNum:uint;
 private var level:Array;
-private var bricks:Vector.<Brick> = new Vector.<Brick>();
+private var _bricks:Vector.<Brick> = new Vector.<Brick>();
 public function Level(num:uint) {
   super();
   if (num >= LEVELS.length) {
@@ -35,10 +38,27 @@ public function Level(num:uint) {
       if (row[j] == 1) {
         brick = new Brick(sx + j * (Brick.WIDTH + 10), 40 + i * (Brick.HEIGHT + 10));
         addChild(brick);
-        bricks.push(brick);
+        _bricks.push(brick);
       }
     }
   }
 }
+
+public function get bricks():Vector.<Brick> {
+  return _bricks;
+}
+
+public function hitBrick(brick:Brick):void {
+  const index:int = _bricks.indexOf(brick);
+  if (index == -1) {
+    throw new Error("[Error] no such brick");
+  }
+  removeChild(brick);
+  _bricks.splice(index, 1);
+  if (_bricks.length == 0) {
+    dispatchEvent(new Event(Level.WIN_EVENT));
+  }
+}
+
 }
 }
