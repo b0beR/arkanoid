@@ -10,15 +10,15 @@ public class Level extends CasaSprite {
 public static const WIN_EVENT:String = "levelWin";
 private static const LEVELS:Array = [
   [
-    [1,1,1,1,1,1,1,1,1,1],
-    [1,1,1,1,0,0,1,1,1,1],
-    [0,0,1,1,1,1,1,1,0,0]
+    [1,1,1,1,1,1,1,1],
+    [1,1,1,0,0,1,1,1],
+    [0,0,1,1,1,1,0,0]
   ],
   [
-    [0,1,1,0,0,0,0,1,1,0],
-    [0,0,1,1,1,1,1,1,0,0],
-    [0,1,1,1,0,0,1,1,1,0],
-    [1,1,1,1,1,1,1,1,1,1]
+    [0,1,1,0,0,1,1,0],
+    [0,0,1,1,1,1,0,0],
+    [0,1,1,0,0,1,1,0],
+    [1,1,1,1,1,1,1,1]
   ]
 ];
 
@@ -39,10 +39,10 @@ public function Level(num:uint) {
   var brick:Brick;
   for (i = 0; i < level.length; i++) {
     row = level[i];
-    sx = (Main.FIELD_WIDTH - (row.length * Brick.WIDTH + (row.length - 1) * 10)) / 2;
+    sx = (Main.FIELD_WIDTH - (row.length * Brick.WIDTH + (row.length - 1) * 5)) / 2;
     for (j = 0; j < row.length; j++) {
       if (row[j] == 1) {
-        brick = new Brick(sx + j * (Brick.WIDTH + 10), 40 + i * (Brick.HEIGHT + 10));
+        brick = new Brick(sx + j * (Brick.WIDTH + 5), 40 + i * (Brick.HEIGHT + 10));
         addChild(brick);
         _bricks.push(brick);
       }

@@ -1,4 +1,6 @@
 package ru.b0ber.arkanoid {
+import ru.b0ber.arkanoid.loader.BatchLoader;
+import ru.b0ber.arkanoid.loader.LoaderEvent;
 import flash.display.Sprite;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
@@ -20,9 +22,16 @@ private var level:Level;
 [Swf(width=640, height=480, frameRate=60)]
 public function Main() {
   super();
-  trace("[FrameRate] ", stage.frameRate);
   stage.scaleMode = StageScaleMode.NO_SCALE;
   stage.align = StageAlign.TOP_LEFT;
+  const loader:BatchLoader = new BatchLoader();
+  loader.add("ball.png", "ball");
+  loader.add("brick.png", "brick");
+  loader.addEventListener(LoaderEvent.BATCH_COMPLETE, loadComplete);
+  loader.start(5);
+}
+
+private function loadComplete(event:LoaderEvent):void {
   bat = new Bat(320, 470);
   addChild(bat);
   addEventListener(Event.ENTER_FRAME, bat.moveOneFrame);

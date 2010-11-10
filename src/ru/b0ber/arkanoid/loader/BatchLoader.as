@@ -16,8 +16,15 @@ private var pendingLoad:Vector.<Resource> = new Vector.<Resource>();
 private var count:uint = 0;
 private var loadedCount:uint = 0;
 private var errorCount:uint = 0;
+private static var instance:BatchLoader = null;
+
 public function BatchLoader() {
   super();
+  instance = this;
+}
+
+public static function getInstance():BatchLoader {
+  return instance;
 }
 
 /*
@@ -42,7 +49,7 @@ public function add(resourceUrl:String, resourceAlias:String, onComplete:Functio
  * maxActiveConnections - максимальное количество открытых соединений
  */
 public function start(maxActiveConnections:uint = 0):void {
-  if (maxActiveConnections == 0) {
+  if (maxActiveConnections == 0 || maxActiveConnections > count) {
     maxActiveConnections = count;
   }
   for (var i:uint = 0; i < maxActiveConnections; i++) {

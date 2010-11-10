@@ -1,6 +1,10 @@
 package ru.b0ber.arkanoid {
+import ru.b0ber.arkanoid.loader.BatchLoader;
+
 import org.casalib.display.CasaSprite;
 
+import flash.display.Bitmap;
+import flash.display.BitmapData;
 import flash.events.Event;
 import flash.geom.Point;
 import flash.geom.Rectangle;
@@ -17,9 +21,14 @@ private var level:Level;
 
 public function Ball(initialX:Number, initialY:Number, initialSpeed:Point, currentBat:Bat, currentLevel:Level) {
   super();
-  graphics.beginFill(0xFF0000);
-  graphics.drawCircle(0, 0, BALL_RADIUS);
-  graphics.endFill();
+//  graphics.beginFill(0xFF0000);
+//  graphics.drawCircle(0, 0, BALL_RADIUS);
+//  graphics.endFill();
+  const bd:BitmapData = (BatchLoader.getInstance().getContents("ball") as Bitmap).bitmapData;
+  const bmp:Bitmap = new Bitmap(bd);
+  bmp.x = -10;
+  bmp.y = -10;
+  addChild(bmp);
   x = initialX;
   y = initialY;
   speed = initialSpeed;
