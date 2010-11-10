@@ -1,14 +1,14 @@
 package ru.b0ber.arkanoid {
-import flash.ui.Keyboard;
-import flash.events.KeyboardEvent;
 import flash.display.Sprite;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.events.Event;
+import flash.events.KeyboardEvent;
 import flash.geom.Point;
+import flash.ui.Keyboard;
 
 /**
- * @author Andrey Bobkv
+ * @author Andrey Bobkov
  */
 public class Main extends Sprite {
 public static const FIELD_WIDTH:Number = 640;

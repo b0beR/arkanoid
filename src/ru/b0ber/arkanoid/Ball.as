@@ -1,13 +1,12 @@
 package ru.b0ber.arkanoid {
-import flash.utils.setTimeout;
-import flash.geom.Rectangle;
 import org.casalib.display.CasaSprite;
 
 import flash.events.Event;
 import flash.geom.Point;
+import flash.geom.Rectangle;
 
 /**
- * @author Andrey Bobkv
+ * @author Andrey Bobkov
  */
 public class Ball extends CasaSprite {
 public static const FAIL_EVENT:String = "ballFail";
@@ -78,7 +77,14 @@ private function testBat():void {
       y = 2 * (batRect.y - BALL_RADIUS) - y;
       // Пересчитываем вектор скорости
       speed.x += bat.ballDx;
-      speed.y = - Math.sqrt(_speed * _speed - speed.x * speed.x);
+      
+      if (_speed - Math.abs(speed.x) <= 0.2) {
+        // Если после отскока шарик летит горизонтально, придаем ему небольшую вертикальную скорость
+        speed.y = -1;
+        speed.x = Math.sqrt(_speed * _speed - speed.y * speed.y);
+      } else {
+        speed.y = - Math.sqrt(_speed * _speed - speed.x * speed.x);
+      }
     }
   }
 }
@@ -220,6 +226,11 @@ private function hitCorner(corner:Point):void {
     // Вектор скорости теперь сонаправлен с отраженной частью вектора перемещения
     speed.x = (x - hitPoint.x) / _dxy * _speed;
     speed.y = (y - hitPoint.y) / _dxy * _speed;
+    if (Math.abs(speed.y) < 0.5) {
+      // Если после отскока шарик летит горизонтально, придаем ему небольшую вертикальную скорость
+      speed.y = 1;
+      speed.x = Math.sqrt(_speed * _speed - speed.y * speed.y);
+    }
 }
 
 /*

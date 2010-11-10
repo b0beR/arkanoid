@@ -4,7 +4,7 @@ import org.casalib.display.CasaSprite;
 import flash.events.Event;
 
 /**
- * @author Andrey Bobkv
+ * @author Andrey Bobkov
  */
 public class Level extends CasaSprite {
 public static const WIN_EVENT:String = "levelWin";

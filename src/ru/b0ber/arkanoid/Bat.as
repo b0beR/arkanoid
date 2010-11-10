@@ -4,7 +4,7 @@ package ru.b0ber.arkanoid {
 	import org.casalib.display.CasaSprite;
 
 /**
- * @author Andrey Bobkv
+ * @author Andrey Bobkov
  */
 public class Bat extends CasaSprite {
 private const WIDTH:Number = 100;

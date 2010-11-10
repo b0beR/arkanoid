@@ -2,7 +2,7 @@ package ru.b0ber.arkanoid {
 	import org.casalib.display.CasaSprite;
 
 /**
- * @author Andrey Bobkv
+ * @author Andrey Bobkov
  */
 public class Brick extends CasaSprite {
 public static const WIDTH:Number = 50;
