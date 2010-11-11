@@ -1,4 +1,5 @@
 package ru.b0ber.arkanoid.loader {
+import flash.system.ApplicationDomain;
 import flash.events.IOErrorEvent;
 import flash.display.LoaderInfo;
 import flash.display.DisplayObject;
@@ -69,6 +70,17 @@ public function getContents(alias:String):DisplayObject {
     throw new Error("Not loaded");
   }
   return resource.content;
+}
+
+public function getAppDomain(alias:String):ApplicationDomain {
+  if (!(alias in resources)) {
+    throw new Error("No such resource!");
+  }
+  const resource:Resource = resources[alias] as Resource;
+  if (!resource.complete) {
+    throw new Error("Not loaded");
+  }
+  return resource.appDomain;
 }
 
 /*

@@ -6,8 +6,10 @@ import org.casalib.display.CasaSprite;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.events.Event;
+import flash.events.KeyboardEvent;
 import flash.geom.Point;
 import flash.geom.Rectangle;
+import flash.ui.Keyboard;
 
 /**
  * @author Andrey Bobkov
@@ -15,25 +17,48 @@ import flash.geom.Rectangle;
 public class Ball extends CasaSprite {
 public static const FAIL_EVENT:String = "ballFail";
 private static const BALL_RADIUS:Number = 10;
+private static const INITIAL_SPEED:Point = new Point(3,-4);
 private var speed:Point;
 private var bat:Bat;
 private var level:Level;
 
-public function Ball(initialX:Number, initialY:Number, initialSpeed:Point, currentBat:Bat, currentLevel:Level) {
+public function Ball(currentBat:Bat) {
   super();
-//  graphics.beginFill(0xFF0000);
-//  graphics.drawCircle(0, 0, BALL_RADIUS);
-//  graphics.endFill();
   const bd:BitmapData = (BatchLoader.getInstance().getContents("ball") as Bitmap).bitmapData;
   const bmp:Bitmap = new Bitmap(bd);
   bmp.x = -10;
   bmp.y = -10;
   addChild(bmp);
-  x = initialX;
-  y = initialY;
-  speed = initialSpeed;
+  speed = null;
   bat = currentBat;
-  level = currentLevel;
+  x = bat.x;
+  y = bat.y - BALL_RADIUS;
+  level = null;
+}
+
+/*
+ * Задать текущий уровень для проверки столкновений с кирпичами
+ */
+public function set currentLevel(newLevel:Level):void {
+  level = newLevel;
+}
+
+/*
+ * Запускает шарик по нажатию пробела
+ */
+public function keyDownListener(event:KeyboardEvent):void {
+  if (event.keyCode == Keyboard.SPACE && speed == null) {
+    speed = new Point(INITIAL_SPEED.x, INITIAL_SPEED.y);
+  }
+}
+
+/*
+ * Возвращает шарик на платформу
+ */
+public function restore():void {
+  x = bat.x;
+  y = bat.y - BALL_RADIUS;
+  speed = null;
 }
 
 /*
@@ -41,11 +66,15 @@ public function Ball(initialX:Number, initialY:Number, initialSpeed:Point, curre
  * Должна вызываться по событию ENTER_FRAME
  */
 public function moveOneFrame(..._):void {
-  x += speed.x;
-  y += speed.y;
-  testLevel();
-  testBat();
-  testWalls();
+  if (speed == null) {
+    x = bat.x;
+  } else {
+    x += speed.x;
+    y += speed.y;
+    testLevel();
+    testBat();
+    testWalls();
+  }
 }
 
 /*
@@ -90,7 +119,7 @@ private function testBat():void {
       if (_speed - Math.abs(speed.x) <= 0.2) {
         // Если после отскока шарик летит горизонтально, придаем ему небольшую вертикальную скорость
         speed.y = -1;
-        speed.x = Math.sqrt(_speed * _speed - speed.y * speed.y);
+        speed.x = speed.x / Math.abs(speed.x) * Math.sqrt(_speed * _speed - speed.y * speed.y);
       } else {
         speed.y = - Math.sqrt(_speed * _speed - speed.x * speed.x);
       }
@@ -102,12 +131,14 @@ private function testBat():void {
  * Проверка всех кирпичей текущего уровня на столкновение
  */
 private function testLevel():void {
-  hb = new Vector.<Brick>();
-  for each (var brick:Brick in level.bricks) {
-    testBrick(brick);
-  }
-  for each (brick in hb) {
-    level.hitBrick(brick);
+  if (level != null) {
+    hb = new Vector.<Brick>();
+    for each (var brick:Brick in level.bricks) {
+      testBrick(brick);
+    }
+    for each (brick in hb) {
+      level.hitBrick(brick);
+    }
   }
 }
 
@@ -279,11 +310,11 @@ private function getHitPoint(p:Point):Point {
   return null;
 }
 
+/*
+ * Добавляет кирпич в список на уничтожение
+ */
 private var hb:Vector.<Brick>;
 private function hitBrick(brick:Brick):void {
-  // setTimeout нужен для того чтобы кирпич удалился из вектора 
-  // только когда закончится вся проверка, иначе индексы собьются
-  //setTimeout(level.hitBrick, 0, brick);
   if (hb.indexOf(brick) == -1) {
     hb.push(brick);
   } else {

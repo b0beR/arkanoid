@@ -1,4 +1,5 @@
 package ru.b0ber.arkanoid.loader {
+import flash.system.ApplicationDomain;
 import flash.events.IOErrorEvent;
 import flash.events.ProgressEvent;
 import flash.display.DisplayObject;
@@ -63,6 +64,13 @@ public function get content():DisplayObject {
     throw new Error("Load not complete yet");
   }
   return loader.content;
+}
+
+public function get appDomain():ApplicationDomain {
+  if (!loaded) {
+    throw new Error("Load not complete yet");
+  }
+  return loader.contentLoaderInfo.applicationDomain;
 }
 
 public function destroy():void {
